@@ -17,7 +17,11 @@ export default function SidebarKasir() {
           Transaksi
         </NavLink>
         <NavLink to="/kasir/riwayat" className={linkClass}>
-          Riwayat
+          Data Transaksi
+        </NavLink>
+
+        <NavLink to="/kasir/Settings" className={linkClass}>
+          Settings
         </NavLink>
       </nav>
     </aside>

@@ -7,7 +7,8 @@ import OwnerLayout from "./components/OwnerLayout";
 // Kasir Pages
 import KasirDashboard from "./pages/kasir/Dashboard";
 import KasirTransaksi from "./pages/kasir/Transaksi";
-import KasirRiwayat from "./pages/kasir/Riwayat";
+import KasirRiwayat from "./pages/kasir/DataTransaksi";
+import KasirSettings from "./pages/kasir/Settings";
 
 // Owner Pages
 import OwnerDashboard from "./pages/owner/Dashboard";
@@ -30,6 +31,7 @@ export default function App() {
           <Route path="dashboard" element={<KasirDashboard />} />
           <Route path="transaksi" element={<KasirTransaksi />} />
           <Route path="riwayat" element={<KasirRiwayat />} />
+          <Route path="settings" element={<KasirSettings />} />
         </Route>
 
         {/* ================= OWNER ================= */}
@@ -42,9 +44,10 @@ export default function App() {
           <Route path="users" element={<UserManagement />} />
         </Route>
 
-        {/* ================= FALLBACK ================= */}
+        {/* ================= halaman default ================= */}
         <Route path="*" element={<KasirDashboard />} />
 
+        <Route path="*" element={<NotFound />} />
       </Routes>
     </BrowserRouter>
   );
