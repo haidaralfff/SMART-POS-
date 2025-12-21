@@ -1,23 +1,22 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 
-// Layouts
-import KasirLayout from "./components/KasirLayout";
-import OwnerLayout from "./components/OwnerLayout";
+// Auth
+import Login from "./pages/auth/Login";
 
-// Kasir Pages
+// Kasir
 import KasirDashboard from "./pages/kasir/Dashboard";
 import KasirTransaksi from "./pages/kasir/Transaksi";
 import KasirRiwayat from "./pages/kasir/DataTransaksi";
 import KasirSettings from "./pages/kasir/Settings";
 
-// Owner Pages
+// Owner
 import OwnerDashboard from "./pages/owner/Dashboard";
 import Produk from "./pages/owner/Produk";
 import Stok from "./pages/owner/Stok";
 import Laporan from "./pages/owner/Laporan";
 import UserManagement from "./pages/owner/UserManagement";
 
-// Not Found
+// Misc
 import NotFound from "./pages/NotFound";
 
 export default function App() {
@@ -25,29 +24,28 @@ export default function App() {
     <BrowserRouter>
       <Routes>
 
-        {/* ================= KASIR ================= */}
-        <Route path="/kasir" element={<KasirLayout />}>
-          <Route index element={<KasirDashboard />} />
-          <Route path="dashboard" element={<KasirDashboard />} />
-          <Route path="transaksi" element={<KasirTransaksi />} />
-          <Route path="riwayat" element={<KasirRiwayat />} />
-          <Route path="settings" element={<KasirSettings />} />
-        </Route>
+        {/* ROOT */}
+        <Route path="/" element={<Navigate to="/login" replace />} />
 
-        {/* ================= OWNER ================= */}
-        <Route path="/owner" element={<OwnerLayout />}>
-          <Route index element={<OwnerDashboard />} />
-          <Route path="dashboard" element={<OwnerDashboard />} />
-          <Route path="produk" element={<Produk />} />
-          <Route path="stok" element={<Stok />} />
-          <Route path="laporan" element={<Laporan />} />
-          <Route path="users" element={<UserManagement />} />
-        </Route>
+        {/* AUTH */}
+        <Route path="/login" element={<Login />} />
 
-        {/* ================= halaman default ================= */}
-        <Route path="*" element={<KasirDashboard />} />
+        {/* KASIR */}
+        <Route path="/kasir/dashboard" element={<KasirDashboard />} />
+        <Route path="/kasir/transaksi" element={<KasirTransaksi />} />
+        <Route path="/kasir/riwayat" element={<KasirRiwayat />} />
+        <Route path="/kasir/settings" element={<KasirSettings />} />
 
+        {/* OWNER */}
+        <Route path="/owner/dashboard" element={<OwnerDashboard />} />
+        <Route path="/owner/produk" element={<Produk />} />
+        <Route path="/owner/stok" element={<Stok />} />
+        <Route path="/owner/laporan" element={<Laporan />} />
+        <Route path="/owner/users" element={<UserManagement />} />
+
+        {/* NOT FOUND */}
         <Route path="*" element={<NotFound />} />
+
       </Routes>
     </BrowserRouter>
   );

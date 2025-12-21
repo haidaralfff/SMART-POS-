@@ -1,4 +1,9 @@
 import { NavLink } from "react-router-dom";
+import { LayoutDashboard,WalletMinimal,NotepadText } from 'lucide-react';
+
+
+
+
 
 export default function SidebarKasir() {
   const linkClass = ({ isActive }) =>
@@ -8,16 +13,16 @@ export default function SidebarKasir() {
 
   return (
     <aside className="w-64 bg-white border-r min-h-screen p-4">
-      <h2 className="text-xl font-bold mb-6">Kasir</h2>
+      <h2 className="text-xl font-bold mb-4">Kasir</h2>
       <nav className="space-y-2">
         <NavLink to="/kasir/dashboard" className={linkClass}>
-          Dashboard
+      <LayoutDashboard className="flex h-5 w-5" />Dashboard
         </NavLink>
         <NavLink to="/kasir/transaksi" className={linkClass}>
-          Transaksi
+  <WalletMinimal className="" />        Transaksi
         </NavLink>
         <NavLink to="/kasir/riwayat" className={linkClass}>
-          Data Transaksi
+         <NotepadText /> Data Transaksi
         </NavLink>
 
         <NavLink to="/kasir/Settings" className={linkClass}>
