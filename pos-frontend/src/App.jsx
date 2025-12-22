@@ -16,6 +16,9 @@ import Stok from "./pages/owner/Stok";
 import Laporan from "./pages/owner/Laporan";
 import UserManagement from "./pages/owner/UserManagement";
 
+// Protected Route
+import ProtectedRoute from "./pages/protected role/ProtectedRoute";
+
 // Misc
 import NotFound from "./pages/NotFound";
 

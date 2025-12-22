@@ -51,7 +51,7 @@ function StatCard({ title, value, highlight }) {
       <p className="text-sm text-gray-500">{title}</p>
       <p
         className={`text-3xl font-bold mt-2 ${
-          highlight ? "text-green-600" : ""
+          highlight ? "text-red-600" : ""
         }`}
       >
         {value}
