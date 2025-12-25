@@ -78,7 +78,7 @@ export default function Login() {
         </form>
 
         <p className="text-center text-sm text-gray-500 mt-4">
-          Belum punya akun?{" "}
+          Belum punya akun?{""}
           <span className="text-blue-600 cursor-pointer hover:underline">
             Daftar
           </span>
