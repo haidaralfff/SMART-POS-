@@ -54,6 +54,7 @@ export default function Login() {
             <input
               type="email"
               required
+              label = "Masukan Email"
               className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             />
           </div>
@@ -65,6 +66,7 @@ export default function Login() {
             <input
               type="password"
               required
+              label = "Masukan Password"
               className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
             />
           </div>

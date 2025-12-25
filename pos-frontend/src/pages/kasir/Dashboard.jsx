@@ -1,9 +1,7 @@
-import SidebarKasir from "../../components/SidebarKasir";
+
 export default function Dashboard() {
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
-      <SidebarKasir />
       
 
       {/* Content */}

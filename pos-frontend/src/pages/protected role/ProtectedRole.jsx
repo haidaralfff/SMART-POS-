@@ -1,18 +1,15 @@
-import { Navigate } from "react-router-dom";
+import { Navigate, useLocation } from "react-router-dom";
 
-export default function ProtectedRole({ children, role }) {
-  const token = localStorage.getItem("token");
-  const userRole = localStorage.getItem("role");
+// validasi role dengan mengecek username password benar atau tidak
+const ProtectedRole = ({ children, role }) => {
+    const location = useLocation();
 
-  // belum login
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
+    if (role === "kasir") {
+        return children;
+    } else {
+        return <Navigate to="/login" state={{ from: location }} />;
+    }
+};
 
-  // role tidak sesuai
-  if (role && userRole !== role) {
-    return <Navigate to="/login" replace />;
-  }
 
-  return children;
-}
+export default ProtectedRole;
