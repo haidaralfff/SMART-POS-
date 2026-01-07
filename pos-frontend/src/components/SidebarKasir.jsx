@@ -1,13 +1,20 @@
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import { LayoutDashboard, WalletMinimal, NotepadText, Cog,User ,LogOut} from "lucide-react";
 
 export default function SidebarKasir() {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.clear();
+    navigate("/login", { replace: true });
+  };
+
   const linkClass = ({ isActive }) =>
     `flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium transition
      ${
        isActive
          ? "bg-red-600 text-white"
-         : "text-gray-700 hover:bg-blue-100"
+         : "text-gray-700 hover:bg-red-100"
      }`;
 
   return (
@@ -39,13 +46,14 @@ export default function SidebarKasir() {
           <span>Settings</span>
         </NavLink>
 
-              <div
-        className="mt-4 flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium
+              <button
+        onClick={handleLogout}
+        className="mt-4 w-full flex items-center gap-3 px-4 py-2.5 rounded-lg font-medium
                    text-red-600 hover:bg-red-50 cursor-pointer transition"
       >
         <LogOut className="h-5 w-5 shrink-0" />
         <span>Logout</span>
-      </div>
+      </button>
         
       </nav>
     </aside>

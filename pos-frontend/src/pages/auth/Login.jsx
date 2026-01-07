@@ -1,37 +1,57 @@
 import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export default function Login() {
   const navigate = useNavigate();
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
 
   // 🔐 AUTO REDIRECT JIKA SUDAH LOGIN
   useEffect(() => {
-    const isLogin = localStorage.getItem("isLogin");
+    const isLogin = localStorage.getItem("isLogin") === "true";
     const role = localStorage.getItem("role");
 
-    if (isLogin) {
-      if (role === "kasir") {
-        navigate("/kasir/dashboard", { replace: true });
-      } else if (role === "owner") {
-        navigate("/owner/dashboard", { replace: true });
-      }
+    if (!isLogin || !role) return;
+
+    if (role === "kasir") {
+      navigate("/kasir/dashboard", { replace: true });
+    } else if (role === "owner") {
+      navigate("/owner/dashboard", { replace: true });
     }
   }, [navigate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError("");
 
-    // 🔧 SIMULASI LOGIN (NANTI GANTI API)
-    const role = "kasir"; // ganti "owner" untuk test
+    // ✅ VALIDASI INPUT
+    if (!email || !password) {
+      setError("Email dan password harus diisi");
+      return;
+    }
 
+    // 🔧 SIMULASI LOGIN - Demo credentials
+    let role = null;
+    if (email === "kasir@posfy.com" && password === "123456") {
+      role = "kasir";
+    } else if (email === "owner@posfy.com" && password === "123456") {
+      role = "owner";
+    } else {
+      setError("Email atau password salah");
+      return;
+    }
+
+    // ✅ SIMPAN KE LOCALSTORAGE
     localStorage.setItem("isLogin", "true");
     localStorage.setItem("role", role);
+    localStorage.setItem("email", email);
 
-    // 🚀 REDIRECT KE DASHBOARD
+    // ✅ REDIRECT SESUAI ROLE
     if (role === "kasir") {
-      navigate("/kasir/dashboard");
-    } else {
-      navigate("/owner/dashboard");
+      navigate("/kasir/dashboard", { replace: true });
+    } else if (role === "owner") {
+      navigate("/owner/dashboard", { replace: true });
     }
   };
 
@@ -44,47 +64,54 @@ export default function Login() {
           Masuk ke aplikasi
         </p>
 
-        {/* 🔥 PENTING: onSubmit */}
-        <form onSubmit={handleSubmit} className="space-y-4">
+        {error && (
+          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-2 rounded-lg mb-4">
+            {error}
+          </div>
+        )}
 
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium mb-1">
               Email
             </label>
             <input
               type="email"
               required
-              label = "Masukan Email"
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full px-3 py-2 border rounded-lg"
+              placeholder="kasir@posfy.com atau owner@posfy.com"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium mb-1">
               Password
             </label>
             <input
               type="password"
               required
-              label = "Masukan Password"
-              className="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full px-3 py-2 border rounded-lg"
+              placeholder="123456"
             />
           </div>
 
           <button
             type="submit"
-            className="w-full bg-red-600 text-white py-2 rounded-lg font-semibold hover:bg-red-700 transition"
+            className="w-full bg-red-600 text-white py-2 rounded-lg hover:bg-red-700"
           >
             Login
           </button>
         </form>
 
-        <p className="text-center text-sm text-gray-500 mt-4">
-          Belum punya akun?{""}
-          <span className="text-blue-600 cursor-pointer hover:underline">
-            Daftar
-          </span>
-        </p>
+        <div className="mt-4 text-xs text-gray-500">
+          <p className="font-semibold mb-2">Demo Credentials:</p>
+          <p>👨‍💼 Kasir: kasir@posfy.com / 123456</p>
+          <p>👔 Owner: owner@posfy.com / 123456</p>
+        </div>
       </div>
     </div>
   );
