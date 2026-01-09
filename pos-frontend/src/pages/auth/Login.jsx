@@ -88,7 +88,7 @@ export default function Login() {
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring ${
                 error ? "border-red-500 focus:ring-red-300" : "border-gray-300 focus:ring-red-300"
               }`}
-              placeholder="kasir@posfy.com atau owner@posfy.com"
+              placeholder="Username or email"
             />
           </div>
 
@@ -104,7 +104,7 @@ export default function Login() {
               className={`w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring ${
                 error ? "border-red-500 focus:ring-red-300" : "border-gray-300 focus:ring-red-300"
               }`}
-              placeholder="123456"
+              placeholder="Password"
             />
           </div>
 

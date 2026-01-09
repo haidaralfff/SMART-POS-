@@ -1,0 +1,27 @@
+<svg width="520" height="120" viewBox="0 0 520 120" fill="none"
+  xmlns="http://www.w3.org/2000/svg">
+
+  <g transform="translate(10,10)">
+    <rect x="0" y="20" rx="14" ry="14" width="90" height="90" fill="#E53935"/>
+    <rect x="22" y="0" width="46" height="24" rx="4" fill="#E53935"/>
+    <rect x="28" y="6" width="34" height="6" rx="3" fill="white"/>
+    <rect x="16" y="30" width="58" height="20" rx="4" fill="white"/>
+
+    <g fill="white">
+      <rect x="18" y="56" width="10" height="10" rx="2"/>
+      <rect x="34" y="56" width="10" height="10" rx="2"/>
+      <rect x="50" y="56" width="10" height="10" rx="2"/>
+      <rect x="18" y="72" width="10" height="10" rx="2"/>
+      <rect x="34" y="72" width="10" height="10" rx="2"/>
+      <rect x="50" y="72" width="10" height="10" rx="2"/>
+    </g>
+  </g>
+
+  <text x="130" y="78"
+    font-size="48"
+    font-weight="700"
+    font-family="Inter, Poppins, Arial, sans-serif"
+    fill="#111111">
+    Smart<tspan fill="#E53935">POS</tspan>
+  </text>
+</svg>
