@@ -1,3 +1,29 @@
+---
+
+## Quality Assurance — Test Case Table (Frontend)
+
+| Kategori     | Test Case                                 | Status     | Deskripsi Singkat                                      |
+|--------------|-------------------------------------------|------------|--------------------------------------------------------|
+| Auth         | Login dengan kredensial valid             | Passed     | User berhasil login, diarahkan ke dashboard            |
+| Auth         | Login dengan email/password salah         | Passed     | Pesan error muncul, tetap di halaman login             |
+| Auth         | Logout                                   | Passed     | User logout, kembali ke halaman login                  |
+| Navigasi     | Sidebar sesuai role (kasir/owner)         | Passed     | Menu sidebar tampil sesuai role user                   |
+| Navigasi     | Akses halaman tanpa login                 | Passed     | Dialihkan ke halaman login                             |
+| Role         | Owner akses halaman owner                 | Passed     | Owner bisa akses dashboard, laporan, produk, settings  |
+| Role         | Kasir akses halaman kasir                 | Passed     | Kasir bisa akses dashboard, transaksi, settings        |
+| Role         | Kasir akses halaman owner                 | Passed     | Ditolak, dialihkan ke NotFound/Forbidden               |
+| Produk       | Lihat daftar produk                       | Passed     | Tabel produk tampil                                    |
+| Produk       | Tambah/edit/hapus produk (owner)          | Passed     | CRUD produk berhasil, data terupdate                   |
+| Transaksi    | Lihat daftar transaksi                    | Passed     | Tabel transaksi tampil                                 |
+| Transaksi    | Input transaksi baru                      | Passed     | Transaksi berhasil, data bertambah                     |
+| Laporan      | Lihat laporan stok/transaksi (owner)      | Passed     | Data laporan tampil                                    |
+| Settings     | Lihat dan update settings                 | Passed     | Data settings tampil dan bisa diubah                   |
+| Error        | API error (misal token expired)           | Passed     | Pesan error muncul, user logout otomatis               |
+| Error        | Halaman tidak ditemukan                   | Passed     | Komponen NotFound tampil                               |
+
+**Catatan:**
+- Status "Passed" berdasarkan pengujian manual pada UI sesuai skenario di atas.
+- Untuk pengujian otomatis, gunakan tools seperti Cypress, Playwright, atau React Testing Library.
 # React + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
