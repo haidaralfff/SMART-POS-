@@ -13,6 +13,7 @@ import {
   FileText,
   Wallet,
 } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const chartData = [
   { day: "Senin", value: 700 },
@@ -25,6 +26,51 @@ const chartData = [
 ];
 
 export default function DashboardOwner() {
+  const [stats, setStats] = useState({
+    totalProduk: 0,
+    totalStok: 0,
+    totalTransaksi: 0,
+    totalPendapatan: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4001";
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch produk
+      const produkRes = await fetch(`${apiUrl}/api/produk`);
+      const produkData = await produkRes.json();
+      
+      // Fetch transaksi
+      const transaksiRes = await fetch(`${apiUrl}/api/transaksi`);
+      const transaksiData = await transaksiRes.json();
+
+      // Calculate stats
+      const totalProduk = produkData.length || 0;
+      const totalStok = produkData.reduce((sum, p) => sum + (p.stok || 0), 0);
+      const totalTransaksi = transaksiData.length || 0;
+      const totalPendapatan = transaksiData.reduce((sum, t) => sum + (t.total || 0), 0);
+
+      setStats({
+        totalProduk,
+        totalStok,
+        totalTransaksi,
+        totalPendapatan,
+      });
+    } catch (err) {
+      console.error("Error fetching stats:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex-1 p-6 lg:p-8 space-y-6 bg-gray-100">
       {/* Header */}
@@ -39,25 +85,25 @@ export default function DashboardOwner() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard
           title="Total Produk"
-          value="125"
+          value={loading ? "-" : stats.totalProduk}
           color="blue"
           icon={Layers}
         />
         <StatCard
           title="Total Stok"
-          value="2.250"
+          value={loading ? "-" : stats.totalStok.toLocaleString()}
           color="green"
           icon={Package}
         />
         <StatCard
           title="Total Transaksi"
-          value="1.250"
+          value={loading ? "-" : stats.totalTransaksi.toLocaleString()}
           color="yellow"
           icon={FileText}
         />
         <StatCard
           title="Total Pendapatan"
-          value="Rp 200.250.000"
+          value={loading ? "-" : `Rp ${stats.totalPendapatan.toLocaleString()}`}
           color="red"
           icon={Wallet}
         />

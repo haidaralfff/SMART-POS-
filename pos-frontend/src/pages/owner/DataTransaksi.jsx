@@ -1,20 +1,36 @@
 import { Search, Download } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function DataTransaksi() {
   const [searchTerm, setSearchTerm] = useState("");
+  const [transaksi, setTransaksi] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const transaksiList = [
-    { id: 1, tanggal: "2024-01-07", waktu: "10:30", kasir: "Budi", total: "Rp 45.000", status: "Selesai" },
-    { id: 2, tanggal: "2024-01-07", waktu: "11:15", kasir: "Eka", total: "Rp 62.000", status: "Selesai" },
-    { id: 3, tanggal: "2024-01-07", waktu: "12:45", kasir: "Budi", total: "Rp 38.500", status: "Selesai" },
-    { id: 4, tanggal: "2024-01-07", waktu: "13:20", kasir: "Rini", total: "Rp 155.000", status: "Selesai" },
-  ];
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4001";
 
-  const filteredTransaksi = transaksiList.filter((t) =>
-    t.kasir.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    t.tanggal.includes(searchTerm)
+  useEffect(() => {
+    fetchTransaksi();
+  }, []);
+
+  const fetchTransaksi = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${apiUrl}/api/transaksi`);
+      const data = await response.json();
+      setTransaksi(data || []);
+    } catch (err) {
+      console.error("Error fetching transaksi:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredTransaksi = transaksi.filter((t) =>
+    (t.user_id?.toLowerCase().includes(searchTerm.toLowerCase()) || false) ||
+    (t.created_at?.includes(searchTerm) || false)
   );
+
+  const totalPendapatan = filteredTransaksi.reduce((sum, t) => sum + (t.total || 0), 0);
 
   return (
     <div className="p-6 bg-gray-100 min-h-screen">
@@ -30,7 +46,7 @@ export default function DataTransaksi() {
           <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
           <input
             type="text"
-            placeholder="Cari kasir atau tanggal..."
+            placeholder="Cari user atau tanggal..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:ring focus:ring-red-300"
@@ -44,42 +60,54 @@ export default function DataTransaksi() {
 
       {/* Table */}
       <div className="bg-white rounded-xl shadow overflow-hidden">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="bg-red-50 border-b">
-              <th className="p-4 text-left font-semibold text-gray-700">No</th>
-              <th className="p-4 text-left font-semibold text-gray-700">Tanggal</th>
-              <th className="p-4 text-left font-semibold text-gray-700">Waktu</th>
-              <th className="p-4 text-left font-semibold text-gray-700">Kasir</th>
-              <th className="p-4 text-left font-semibold text-gray-700">Total</th>
-              <th className="p-4 text-left font-semibold text-gray-700">Status</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredTransaksi.length > 0 ? (
-              filteredTransaksi.map((transaksi, index) => (
-                <tr key={transaksi.id} className="border-b hover:bg-gray-50">
-                  <td className="p-4 text-gray-700">{index + 1}</td>
-                  <td className="p-4 text-gray-700">{transaksi.tanggal}</td>
-                  <td className="p-4 text-gray-700">{transaksi.waktu}</td>
-                  <td className="p-4 font-medium text-gray-900">{transaksi.kasir}</td>
-                  <td className="p-4 text-gray-700 font-semibold">{transaksi.total}</td>
-                  <td className="p-4">
-                    <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
-                      {transaksi.status}
-                    </span>
+        {loading ? (
+          <div className="p-8 text-center">Loading...</div>
+        ) : (
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="bg-red-50 border-b">
+                <th className="p-4 text-left font-semibold text-gray-700">No</th>
+                <th className="p-4 text-left font-semibold text-gray-700">Tanggal</th>
+                <th className="p-4 text-left font-semibold text-gray-700">Total</th>
+                <th className="p-4 text-left font-semibold text-gray-700">Bayar</th>
+                <th className="p-4 text-left font-semibold text-gray-700">Kembalian</th>
+                <th className="p-4 text-left font-semibold text-gray-700">Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredTransaksi.length > 0 ? (
+                filteredTransaksi.map((trans, index) => (
+                  <tr key={trans.id} className="border-b hover:bg-gray-50">
+                    <td className="p-4 text-gray-700">{index + 1}</td>
+                    <td className="p-4 text-gray-700">
+                      {new Date(trans.created_at).toLocaleDateString("id-ID")}
+                    </td>
+                    <td className="p-4 text-gray-700 font-semibold">
+                      Rp {trans.total?.toLocaleString()}
+                    </td>
+                    <td className="p-4 text-gray-700">
+                      Rp {trans.bayar?.toLocaleString()}
+                    </td>
+                    <td className="p-4 text-gray-700">
+                      Rp {trans.kembalian?.toLocaleString()}
+                    </td>
+                    <td className="p-4">
+                      <span className="px-3 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                        Selesai
+                      </span>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="p-8 text-center text-gray-500">
+                    Data transaksi tidak ditemukan
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="p-8 text-center text-gray-500">
-                  Data transaksi tidak ditemukan
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
+              )}
+            </tbody>
+          </table>
+        )}
       </div>
 
       {/* Summary */}
@@ -90,7 +118,9 @@ export default function DataTransaksi() {
         </div>
         <div className="bg-white rounded-lg shadow p-4">
           <p className="text-sm text-gray-600">Total Pendapatan</p>
-          <p className="text-2xl font-bold text-green-600">Rp 300.500</p>
+          <p className="text-2xl font-bold text-green-600">
+            Rp {totalPendapatan.toLocaleString()}
+          </p>
         </div>
       </div>
     </div>

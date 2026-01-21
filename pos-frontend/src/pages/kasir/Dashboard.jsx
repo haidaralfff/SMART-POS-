@@ -6,6 +6,7 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { useEffect, useState } from "react";
 
 const chartData = [
   { day: "Sen", value: 1600000 },
@@ -18,6 +19,60 @@ const chartData = [
 ];
 
 export default function Dashboard() {
+  const [stats, setStats] = useState({
+    transaksiHariIni: 0,
+    pendapatan: 0,
+    produkTerjual: 0,
+  });
+  const [loading, setLoading] = useState(true);
+
+  const apiUrl = import.meta.env.VITE_API_URL || "http://localhost:4001";
+  const userId = localStorage.getItem("userId");
+
+  useEffect(() => {
+    fetchStats();
+  }, []);
+
+  const fetchStats = async () => {
+    try {
+      setLoading(true);
+      
+      // Fetch kasir's transactions
+      const transaksiRes = await fetch(`${apiUrl}/api/transaksi`);
+      const transaksiData = await transaksiRes.json();
+
+      // Filter transaksi for this kasir and today
+      const today = new Date().toISOString().split("T")[0];
+      const kasirTransaksi = transaksiData.filter(
+        (t) =>
+          t.kasir_id === userId &&
+          t.created_at?.startsWith(today)
+      );
+
+      const totalTransaksiHariIni = kasirTransaksi.length;
+      const totalPendapatan = kasirTransaksi.reduce(
+        (sum, t) => sum + (t.total || 0),
+        0
+      );
+
+      // Estimate produk terjual (assuming items is stored)
+      const produkTerjual = kasirTransaksi.reduce(
+        (sum, t) => sum + (t.items?.length || 0),
+        0
+      );
+
+      setStats({
+        transaksiHariIni: totalTransaksiHariIni,
+        pendapatan: totalPendapatan,
+        produkTerjual: produkTerjual,
+      });
+    } catch (err) {
+      console.error("Error fetching stats:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="flex min-h-screen bg-gray-100">
       <main className="flex-1 p-6 lg:p-8 space-y-8">
@@ -31,9 +86,23 @@ export default function Dashboard() {
 
         {/* Statistik */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          <StatCard title="Transaksi Hari Ini" value="30" />
-          <StatCard title="Pendapatan" value="Rp 20jt" highlight />
-          <StatCard title="Produk Terjual" value="10" />
+          <StatCard
+            title="Transaksi Hari Ini"
+            value={loading ? "-" : stats.transaksiHariIni}
+          />
+          <StatCard
+            title="Pendapatan"
+            value={
+              loading
+                ? "-"
+                : `Rp ${stats.pendapatan.toLocaleString()}`
+            }
+            highlight
+          />
+          <StatCard
+            title="Produk Terjual"
+            value={loading ? "-" : stats.produkTerjual}
+          />
           <StatCard title="Shift Aktif" value="08:00 - 16:00" />
         </div>
 
